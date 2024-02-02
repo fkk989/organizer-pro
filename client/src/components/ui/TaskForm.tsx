@@ -51,7 +51,6 @@ export const TaskForm: React.FC<TaskFormProp> = ({}) => {
         <div className="w-[100%] flex flex-col items-center z-[12]">
           <h1 className="text-white text-[25px] font-[500] mt-[20px]">
             Add Todo
-            {`${important}`}
           </h1>
           <div className="w-[100%]  flex flex-col items-center mt-[50px] gap-[20px]">
             <input
