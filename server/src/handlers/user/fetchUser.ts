@@ -4,7 +4,6 @@ import { NextFncReq } from "../../middleware";
 export async function fetchUser(req: NextFncReq, res: Response) {
   try {
     const user = req.user;
-
     user!.password = "";
 
     return res.status(200).json({

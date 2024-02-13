@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useUserSignup } from "../../hooks";
 interface TaskFormProp {}
 
 export const SignupForm: React.FC<TaskFormProp> = ({}) => {
@@ -7,6 +8,7 @@ export const SignupForm: React.FC<TaskFormProp> = ({}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { userSignupMutation } = useUserSignup();
   return (
     <div className="  w-[350px] h-[450px] mobile:w-[500px] mobile:h-[450px] bg-[#3f3f3f] rounded-lg overflow-scroll z-[6]">
       <div className="w-[100%] h-[100%] flex flex-col items-center">
@@ -23,7 +25,7 @@ export const SignupForm: React.FC<TaskFormProp> = ({}) => {
           />
           <input
             type="text"
-            placeholder="Name"
+            placeholder="Email"
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
@@ -41,7 +43,12 @@ export const SignupForm: React.FC<TaskFormProp> = ({}) => {
           />
         </div>
         <div className="w-[100%] flex flex-col justify-center items-center mt-[20px] gap-[10px]">
-          <button className="w-[90%] flex justify-center items-center text-white font-[500] bg-[#2F94C4] hover:bg-[#60b8e0] p-[10px] pl-[15px] pr-[15px] rounded-lg">
+          <button
+            className="w-[90%] flex justify-center items-center text-white font-[500] bg-[#2F94C4] hover:bg-[#60b8e0] p-[10px] pl-[15px] pr-[15px] rounded-lg"
+            onClick={() => {
+              userSignupMutation.mutate({ name, email, password });
+            }}
+          >
             Submit
           </button>
           <div className="w-[90%] flex justify-end items-center cursor-pointer text-end">

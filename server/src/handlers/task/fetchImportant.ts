@@ -4,16 +4,16 @@ import { NextFncReq } from "../../middleware";
 import { PrismaSingleton } from "../../clients/db";
 const prismaClient = PrismaSingleton.getInstance().prisma;
 
-export async function deleteTask(req: NextFncReq, res: Response) {
+export async function fetchImportantTasks(req: NextFncReq, res: Response) {
   try {
-    const { id } = req.body as {
-      id: string;
-    };
-    const task = await prismaClient.task.delete({
-      where: { id },
+    const user = req.user;
+
+    const task = await prismaClient.task.findMany({
+      where: { user: { id: user?.id }, important: true },
     });
+
     return res.status(200).json({
-      message: "task deleted successfully",
+      message: "task fetched successfully",
       success: true,
       task,
     });

@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { TaskFromContext } from "../../context";
+import { useAddTask } from "../../hooks";
+import toast from "react-hot-toast";
 interface TaskFormProp {
   cardTitle: string;
 }
@@ -7,11 +9,19 @@ interface TaskFormProp {
 export const TaskForm: React.FC<TaskFormProp> = ({}) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [important, setImportant] = useState<boolean>(false);
+  const [important, setImportant] = useState(false);
+  const [status] = useState<"pending" | "processing" | "completed">("pending");
   const { setTaskForm, setTaskCard } = useContext(TaskFromContext)!;
 
   const taskForm = useRef<HTMLDivElement | null>(null);
   const taskCard = useRef<HTMLDivElement | null>(null);
+
+  const { taskMutation } = useAddTask();
+  function resetState() {
+    setTitle("");
+    setDescription("");
+    setImportant(false);
+  }
 
   useEffect(() => {
     setTaskForm(taskForm.current);
@@ -50,7 +60,7 @@ export const TaskForm: React.FC<TaskFormProp> = ({}) => {
 
         <div className="w-[100%] flex flex-col items-center z-[12]">
           <h1 className="text-white text-[25px] font-[500] mt-[20px]">
-            Add Todo
+            Add To-do
           </h1>
           <div className="w-[100%]  flex flex-col items-center mt-[50px] gap-[20px]">
             <input
@@ -74,9 +84,11 @@ export const TaskForm: React.FC<TaskFormProp> = ({}) => {
               <input
                 type={"checkbox"}
                 id="imp-task"
+                readOnly={true}
                 onClick={() => {
                   setImportant((crnt) => !crnt);
                 }}
+                checked={important ? true : false}
               />
               <label htmlFor="imp-task" className="text-white text-[20px]">
                 Important
@@ -84,7 +96,19 @@ export const TaskForm: React.FC<TaskFormProp> = ({}) => {
             </div>
           </div>
           <div className="w-[100%] flex justify-center items-center mt-[20px]">
-            <button className="w-[90%] flex justify-center items-center text-white font-[500] bg-[#2F94C4] hover:bg-[#60b8e0] p-[10px] pl-[15px] pr-[15px] rounded-lg">
+            <button
+              className="w-[90%] flex justify-center items-center text-white font-[500] bg-[#2F94C4] hover:bg-[#60b8e0] p-[10px] pl-[15px] pr-[15px] rounded-lg"
+              onClick={() => {
+                if (title.length === 0) {
+                  return toast.error("Tittle cannont be empty");
+                }
+                taskMutation.mutate({ title, description, status, important });
+                resetState();
+                taskForm.current?.classList.toggle("hide");
+                taskForm.current?.classList.toggle("show");
+                taskCard.current?.classList.toggle("hide");
+              }}
+            >
               Submit
             </button>
           </div>

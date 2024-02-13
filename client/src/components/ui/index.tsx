@@ -6,3 +6,4 @@ export * from "./TaskAdder";
 export * from "./TaskForm";
 export * from "./LoginForm";
 export * from "./SignupForm";
+export * from "./Filter";

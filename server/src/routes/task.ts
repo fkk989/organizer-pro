@@ -3,14 +3,18 @@ import { authenticateUser } from "../middleware";
 import {
   createTask,
   deleteTask,
-  fetchTask,
+  fetchTasks,
   fetchTaskById,
   updateTask,
+  fetchImportantTasks,
+  updateStatus,
 } from "../handlers";
 
 export const taskRouter = Router();
 
-taskRouter.get("/", authenticateUser, fetchTask);
+taskRouter.get("/", authenticateUser, fetchTasks);
+taskRouter.get("/important", authenticateUser, fetchImportantTasks);
+taskRouter.put("/update-status", authenticateUser, updateStatus);
 
 taskRouter.get("/id", authenticateUser, fetchTaskById);
 

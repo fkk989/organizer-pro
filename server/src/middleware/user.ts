@@ -15,7 +15,7 @@ export const authenticateUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.cookies.organizer_pro_user;
+  const token = req.headers.authorization;
   const prismaClient = PrismaSingleton.getInstance().prisma;
 
   if (!token) {
@@ -26,10 +26,10 @@ export const authenticateUser = async (
   }
 
   try {
+    const authToken = token.split(" ")[1];
     // Verify the JWT token
-    const email = JWT.verify(token, SECRET_KEY) as string;
+    const { email } = JWT.verify(authToken, SECRET_KEY) as { email: string };
 
-    console.log("email ", email);
     // Fetch user from the database
     const user = await prismaClient.user.findUnique({
       where: { email },

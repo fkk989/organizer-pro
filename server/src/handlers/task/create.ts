@@ -25,6 +25,7 @@ export async function createTask(req: NextFncReq, res: Response) {
 
     return res.status(200).json({
       success: true,
+      message: "task created successfully",
       task,
     });
   } catch (e: any) {

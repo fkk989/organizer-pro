@@ -3,17 +3,10 @@ import { Request, Response } from "express";
 import { z } from "zod";
 import { PrismaSingleton } from "../../clients/db";
 import { signAsync, verifyPassword } from "../../helpers";
-
+import { userInput } from "./signup";
 const prismaClient = PrismaSingleton.getInstance().prisma;
 
-const userInput = z.object({
-  name: z.string().max(30).optional(),
-  email: z.string().max(40),
-  password: z.string().max(30),
-});
-
 // env var's
-const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS);
 const secret = process.env.JWT_SECRET;
 
 export async function loginUser(req: Request, res: Response) {
@@ -47,15 +40,15 @@ export async function loginUser(req: Request, res: Response) {
         message: "incorrect password",
       });
     }
-    const signedToken = await signAsync({ email: userInDb.email, secret });
-    res.cookie("organizer_pro_user", signedToken);
 
+    const signedToken = await signAsync({ email: userInDb.email, secret });
     // deleting user password before sending as a response
     userInDb.password = "";
     return res.status(200).json({
       success: true,
       message: "login successfull",
       user: userInDb,
+      token: signedToken,
     });
   } catch (e: any) {
     return res.status(401).json({

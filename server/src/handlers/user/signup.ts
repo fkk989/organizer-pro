@@ -8,7 +8,7 @@ import { signAsync } from "../../helpers";
 
 const prismaClient = PrismaSingleton.getInstance().prisma;
 
-const userInput = z.object({
+export const userInput = z.object({
   name: z.string().max(30).optional(),
   email: z.string().max(40),
   password: z.string().max(30),
@@ -69,14 +69,13 @@ export async function signupUser(
 
     const signedToken = await signAsync({ email: user.email, secret });
 
-    res.cookie("organizer_pro_user", signedToken);
-
     // deleting user password before sending as a response
     user.password = "";
     return res.status(200).json({
       success: true,
       message: "user created successfully",
       user,
+      token: signedToken,
     });
   } catch (e: any) {
     return res.status(401).json({

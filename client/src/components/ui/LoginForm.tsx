@@ -1,10 +1,28 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { useUserLogin } from "../../hooks";
+import { toast } from "react-hot-toast";
 interface LoginFormProp {}
 
 export const LoginForm: React.FC<LoginFormProp> = ({}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { userLoginQuery } = useUserLogin({ email, password });
+
+  useEffect(() => {
+    if (userLoginQuery.isSuccess) {
+      toast.success("successfull", { id: "user-login" });
+      <Navigate to={"/"} />;
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    } else if (userLoginQuery.isError) {
+      // @ts-ignore
+      const message = userLoginQuery.error.response.data.message;
+      toast.error(message ? message : "Error", { id: "user-login" });
+    }
+  }, [userLoginQuery.isError, userLoginQuery.isSuccess]);
 
   return (
     <div className=" w-[350px] h-[350px] mobile:w-[500px] mobile:h-[400px] bg-[#3f3f3f] rounded-lg overflow-scroll z-[10]">
@@ -31,7 +49,12 @@ export const LoginForm: React.FC<LoginFormProp> = ({}) => {
           />
         </div>
         <div className="w-[100%] flex flex-col justify-center items-center mt-[20px] gap-[10px]">
-          <button className="w-[90%] flex justify-center items-center text-white font-[500] bg-[#2F94C4] hover:bg-[#60b8e0] p-[10px] pl-[15px] pr-[15px] rounded-lg">
+          <button
+            className="w-[90%] flex justify-center items-center text-white font-[500] bg-[#2F94C4] hover:bg-[#60b8e0] p-[10px] pl-[15px] pr-[15px] rounded-lg"
+            onClick={() => {
+              userLoginQuery.refetch();
+            }}
+          >
             Submit
           </button>
           <div className="w-[90%] flex justify-end items-center cursor-pointer text-end">

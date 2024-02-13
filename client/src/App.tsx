@@ -28,11 +28,10 @@ function App() {
       <div className="relative w-screen h-[100%] mobile:w-[70 %] pc:w-[80%] flex  items-center">
         {/* mobiel user profile */}
         <MobileUserProfile />
-
         {/* mobile nav */}
         <MobileNav />
 
-        <div className=" w-[100%] h-[100%]  mobile:w-[98%] mobile:h-[90%] bg-[#2e2e2e] rounded-md mobile:border border-[#ffffff3d] overflow-scroll">
+        <div className=" w-[100%] h-[100%]  mobile:w-[98%] mobile:h-[90%] bg-[#2e2e2e] mobile:rounded-md mobile:border border-[#ffffff3d] overflow-scroll">
           <Routes>
             <Route path="/" element={<Protected component={<Home />} />} />
             <Route

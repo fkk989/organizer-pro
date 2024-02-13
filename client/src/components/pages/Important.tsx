@@ -1,12 +1,18 @@
-import { useContext } from "react";
-import { TaskCard, TaskAdder } from "../ui";
+import { useContext, useState } from "react";
+import { TaskCard, TaskAdder, Filter } from "../ui";
 import { IoMdAdd } from "react-icons/io";
 import { TaskFromContext } from "../../context";
+import { useFetchImpTasks } from "../../hooks";
 
 export const Important = () => {
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+
   const { taskForm, taskCard } = useContext(TaskFromContext)!;
+  const { tasks } = useFetchImpTasks()!;
+
   return (
-    <div className="flex flex-col p-[20px] gap-[20px]">
+    <div className="flex flex-col p-[20px] gap-[20px] max-mobile:mb-[100px]">
       <div className="flex justify-between items-center ">
         <div className="flex flex-col gap-[10px]">
           <h1 className="font-[monospace] text-white text-[28px] mobile:text-[35px]">
@@ -25,77 +31,37 @@ export const Important = () => {
           </button>
         </div>
       </div>
+      <div className="sticky w-[100%] top-0 mt-[10px] mb-[10px]">
+        <Filter setSearch={setSearch} setFilter={setFilter} />
+      </div>
       <div className="w-[100%]  task-container  overflow-scroll">
-        <TaskCard
-          status="pending"
-          id=""
-          title="Gym"
-          description="Go to gym at 9 pm"
-          date="30/1/2024"
-        />
-        <TaskCard
-          status="processing"
-          id=""
-          title="Gym"
-          description="Go to gym at 9 pm"
-          date="30/1/2024"
-        />
-        <TaskCard
-          status={"completed"}
-          id=""
-          title="Gym"
-          description="Go to gym at 9 pm"
-          date="30/1/2024"
-        />
-        <TaskCard
-          status={"completed"}
-          id=""
-          title="Gym"
-          description="Go to gym at 9 pm"
-          date="30/1/2024"
-        />
-        <TaskCard
-          status="pending"
-          id=""
-          title="Gym"
-          description="Go to gym at 9 pm"
-          date="30/1/2024"
-        />
-        <TaskCard
-          status="processing"
-          id=""
-          title="Gym"
-          description="Go to gym at 9 pm"
-          date="30/1/2024"
-        />
-        <TaskCard
-          status="processing"
-          id=""
-          title="Gym"
-          description="Go to gym at 9 pm"
-          date="30/1/2024"
-        />
-        <TaskCard
-          status="processing"
-          id=""
-          title="Gym"
-          description="Go to gym at 9 pm"
-          date="30/1/2024"
-        />
-        <TaskCard
-          status="processing"
-          id=""
-          title="Gym"
-          description="Go to gym at 9 pm"
-          date="30/1/2024"
-        />
-        <TaskCard
-          status="processing"
-          id=""
-          title="Gym"
-          description="Go to gym at 9 pm"
-          date="30/1/2024"
-        />
+        {tasks &&
+          tasks
+            .filter((task) => {
+              return filter.toLowerCase() === ""
+                ? task
+                : task.status.toLowerCase().includes(filter.toLowerCase());
+            })
+            .filter((task) => {
+              return search.toLowerCase() === ""
+                ? task
+                : task.title.toLowerCase().includes(search.toLowerCase());
+            })
+            .map(({ id, title, description, status }) => {
+              const taskStatus = status as
+                | "pending"
+                | "processing"
+                | "completed";
+              return (
+                <TaskCard
+                  key={id}
+                  id={id}
+                  title={title}
+                  description={description}
+                  status={taskStatus}
+                />
+              );
+            })}
         <TaskAdder />
       </div>
     </div>
