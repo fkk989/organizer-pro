@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import JWT from "jsonwebtoken";
 
 interface TokenCreationProp {
   email: string;
@@ -8,7 +8,7 @@ interface TokenCreationProp {
 
 export const signAsync = ({ email, secret, options }: TokenCreationProp) => {
   return new Promise((resolve, reject) => {
-    jwt.sign(email, secret, options, (err, token) => {
+    JWT.sign({ email }, secret, { expiresIn: "24h" }, (err, token) => {
       if (err) {
         reject(err);
       } else {

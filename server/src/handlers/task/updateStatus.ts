@@ -4,14 +4,11 @@ import { NextFncReq } from "../../middleware";
 import { PrismaSingleton } from "../../clients/db";
 const prismaClient = PrismaSingleton.getInstance().prisma;
 
-export async function updateTask(req: NextFncReq, res: Response) {
+export async function updateStatus(req: NextFncReq, res: Response) {
   try {
-    const { id, title, description, status, important } = req.body as {
+    const { id, status } = req.body as {
       id: string;
-      title: string;
-      description: string;
       status: string;
-      important: boolean;
     };
     const task = await prismaClient.task.findUnique({
       where: { id },
@@ -27,15 +24,12 @@ export async function updateTask(req: NextFncReq, res: Response) {
     const updatedTask = await prismaClient.task.update({
       where: { id },
       data: {
-        title,
-        description,
         status,
-        important,
       },
     });
 
     return res.status(200).json({
-      message: "task detail updated",
+      message: "status updated",
       success: true,
       task: updatedTask,
     });
