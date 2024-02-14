@@ -11,7 +11,7 @@ services:
       POSTGRES_PASSWORD: fkk989
       POSTGRES_DB: postgres
     volumes:
-      - my-db3:/var/lib/postgresql/data
+      - my-db:/var/lib/postgresql/data
 
   organizer-pro:
     image: fkk989/organizer-pro
@@ -26,5 +26,5 @@ services:
       SALT_ROUNDS: 8
 
 volumes:
-  my-db3:
+  my-db:
     driver: local
