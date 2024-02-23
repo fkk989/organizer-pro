@@ -5,7 +5,7 @@
 - prerequisite you will need docker installed in your system 
 ```bash
 cd server 
-docker compose up .
+docker compose up 
 ```
 - This will run a postgres Db and the backend for you locally 
 
