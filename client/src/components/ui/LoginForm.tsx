@@ -2,18 +2,20 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useUserLogin } from "../../hooks";
 import { toast } from "react-hot-toast";
-interface LoginFormProp {}
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 
-export const LoginForm: React.FC<LoginFormProp> = ({}) => {
+export const LoginForm: React.FC = ({}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordType, setPasswordType] = useState<"text" | "password">(
+    "password"
+  );
 
   const { userLoginQuery } = useUserLogin({ email, password });
 
   useEffect(() => {
     if (userLoginQuery.isSuccess) {
       toast.success("successfull", { id: "user-login" });
-      <Navigate to={"/"} />;
       setTimeout(() => {
         window.location.reload();
       }, 500);
@@ -38,15 +40,32 @@ export const LoginForm: React.FC<LoginFormProp> = ({}) => {
             }}
             className="w-[90%] h-[55px] bg-transparent outline-none text-white text-[20px] border border-[#ffffff88] rounded-lg placeholder:text-[20px] p-[10px] "
           />
-          <input
-            type="text"
-            placeholder="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            className="w-[90%] h-[55px] bg-transparent outline-none text-white text-[20px] border border-[#ffffff88] rounded-lg placeholder:text-[20px] p-[10px] "
-          />
+          <div className="w-[90%] relative flex items-center gap-[10px]">
+            <input
+              type={passwordType}
+              placeholder="password"
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              className="w-[100%] h-[55px] bg-transparent outline-none text-white text-[20px] border border-[#ffffff88] rounded-lg placeholder:text-[20px] p-[10px] "
+            />
+            {passwordType === "password" ? (
+              <FaEye
+                onClick={() => {
+                  setPasswordType("text");
+                }}
+                className="absolute top-[50%] right-[10px] translate-y-[-50%] text-[25px] text-white hover:text-[#d1d0d0] text-wite cursor-pointer"
+              />
+            ) : (
+              <FaEyeSlash
+                onClick={() => {
+                  setPasswordType("password");
+                }}
+                className="absolute top-[50%] right-[10px] translate-y-[-50%] text-[25px] text-white hover:text-[#d1d0d0] text-wite cursor-pointer"
+              />
+            )}
+          </div>
         </div>
         <div className="w-[100%] flex flex-col justify-center items-center mt-[20px] gap-[10px]">
           <button

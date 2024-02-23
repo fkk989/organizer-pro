@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { baseUrl, token } from "../../constants";
 import { toast } from "react-hot-toast";
 import axios from "axios";
-import { user } from "@nextui-org/react";
 import { Navigate } from "react-router-dom";
 
 interface User {
@@ -59,7 +58,9 @@ export const useUserSignup = () => {
     onSuccess: () => {
       toast.success("successfull", { id: "user-signup" });
       queryClient.invalidateQueries({ queryKey: ["fetch-user"] });
-      <Navigate to={"/"} />;
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
     },
     onError: (error: any) => {
       const message = error.response.data.message;

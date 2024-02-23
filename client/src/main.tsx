@@ -23,7 +23,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <QueryClientProvider client={queryClient}>
         <TaskFromProvider>
           <App />
-
           <Toaster position={"top-right"} reverseOrder={false} />
           <ReactQueryDevtools />
         </TaskFromProvider>
